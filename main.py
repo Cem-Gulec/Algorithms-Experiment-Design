@@ -112,5 +112,5 @@ if __name__ == "__main__":
     print(sorted_arr, middle_element)
     
     heap = max_heap(arr)
-    for i in range(math.ceil(len(sorted_arr)/2)): heap.pop()
+    for i in range(math.floor(len(sorted_arr)/2)): heap.pop()
     print(heap.peek())
