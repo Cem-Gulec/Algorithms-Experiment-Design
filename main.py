@@ -59,6 +59,30 @@ class max_heap:
             self.swap(index, largest)
             self.heapify_down(largest)
 
+def array_swap(list, index1, index2):
+
+    list[index1], list[index2] = list[index2], list[index1]
+    return list
+
+def quick_select(list, k):
+
+    pivot = list[0]
+    arr1, arr2 = [], []
+
+    for i in range(1, len(list)):
+        if list[i] < pivot:
+            arr1.append(list[i])
+        elif list[i] > pivot:
+            arr2.append(list[i])
+        else: pass
+
+
+    if k <= len(arr1):
+        return quick_select(arr1, k)
+    elif k > len(list) - len(arr2):
+        return quick_select(arr2, k-( len(list)-len(arr2) ))
+    else:
+        return pivot
 
 def merge_sort(array):
 
@@ -93,24 +117,25 @@ def merge(left, right):
 def insertion_sort(array): 
   
     for i in range(1, len(arr)): 
-        key = array[i] 
-   
-        j = i-1
-        while j >=0 and key < array[j]: 
-                array[j+1] = array[j] 
-                j -= 1
-        array[j+1] = key 
+        j = i
+        while j > 0 and array[j-1] > array[j]:
+            array[j], array[j-1] = array[j-1], array[j]
+            j -= 1
+
+        i += 1
 
     return array
 
 
 if __name__ == "__main__":
-    arr = [12, 11, 13, 5, 6] 
-    sorted_arr = insertion_sort(arr)
-    middle_element = sorted_arr[math.ceil(len(sorted_arr)/2)-1]
-    
-    print(sorted_arr, middle_element)
+    arr = [ 10, 4, 5, 8, 6, 11, 26 ] 
+
+    #trial for first cases
+    #sorted_arr = insertion_sort(arr)
+    sorted_arr = quick_select(arr, math.ceil(len(arr)/2))
+
+    print(sorted_arr)
     
     heap = max_heap(arr)
-    for i in range(math.floor(len(sorted_arr)/2)): heap.pop()
+    for i in range(math.floor(len(arr)/2)): heap.pop()
     print(heap.peek())
