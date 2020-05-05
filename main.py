@@ -59,12 +59,11 @@ class max_heap:
             self.swap(index, largest)
             self.heapify_down(largest)
 
-def array_swap(list, index1, index2):
-
+def swap_array(list, index1, index2):
     list[index1], list[index2] = list[index2], list[index1]
     return list
 
-def quick_select(list, k):
+def quick_select_ver1(list, k):
 
     pivot = list[0]
     arr1, arr2 = [], []
@@ -78,11 +77,40 @@ def quick_select(list, k):
 
 
     if k <= len(arr1):
-        return quick_select(arr1, k)
+        return quick_select_ver1(arr1, k)
     elif k > len(list) - len(arr2):
-        return quick_select(arr2, k-( len(list)-len(arr2) ))
+        return quick_select_ver1(arr2, k-( len(list)-len(arr2) ))
     else:
         return pivot
+
+def quick_select_ver2(list, left, right, k):
+
+    if k > 0 and k <= right-left+1:
+        index = partition(list, left, right)
+
+        if index-1 == k-1:
+            return list[index]
+
+        if index-1 > k-1:
+            return quick_select_ver2(list, 1, index-1, k)
+
+        return quick_select_ver2(list, index+1,
+                                 right, k-index+left-1)
+
+
+def partition(list, left, right):
+
+    pivot = list[right]
+    tmp_index = left
+
+    for i in range(left,right):
+        if list[i] <= pivot:
+            swap_array(list, i, tmp_index)
+            tmp_index += 1
+
+    swap_array(list, right, tmp_index)
+
+    return tmp_index
 
 def merge_sort(array):
 
@@ -128,14 +156,24 @@ def insertion_sort(array):
 
 
 if __name__ == "__main__":
-    arr = [ 10, 4, 5, 8, 6, 11, 26 ] 
+    arr = [ 10, 15, 40, 45, 55, 8, 6, 11, 26 ]
 
-    #trial for first cases
-    #sorted_arr = insertion_sort(arr)
-    sorted_arr = quick_select(arr, math.ceil(len(arr)/2))
+    #insertion sort
+    insertion_sorted_arr = insertion_sort(arr)
+    mid_element_ins = insertion_sorted_arr[math.ceil(len(insertion_sorted_arr)/2)-1]
+    print("after having insertion sort: ", insertion_sorted_arr, "\nmiddle element: ", mid_element_ins)
 
-    print(sorted_arr)
-    
+    #merge sort
+    merge_sorted_arr = merge_sort(arr)
+    mid_element_mrg = merge_sorted_arr[math.ceil(len(merge_sorted_arr) / 2) - 1]
+    print("\nafter having insertion sort: ", merge_sorted_arr, "\nmiddle element: ", mid_element_mrg)
+
+    #building max heap and returning root after n/2 removals
     heap = max_heap(arr)
     for i in range(math.floor(len(arr)/2)): heap.pop()
-    print(heap.peek())
+    print("\nafter having n/2 times removal head of heap returned: ",heap.peek())
+
+    # quick select using first element as pivot
+    quick_selected_arr_ver1 = quick_select_ver1(arr, math.ceil(len(arr) / 2))
+
+    # sorted_arr = quick_select_ver2(arr, 0, len(arr)-1, math.ceil(len(arr)/2)-1)
