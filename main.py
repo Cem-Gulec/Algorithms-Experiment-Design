@@ -97,7 +97,6 @@ def quick_select_ver2(list, left, right, k):
         return quick_select_ver2(list, index+1,
                                  right, k-index+left-1)
 
-
 def partition(list, left, right):
 
     pivot = list[right]
@@ -156,24 +155,26 @@ def insertion_sort(array):
 
 
 if __name__ == "__main__":
-    arr = [ 10, 15, 40, 45, 55, 8, 6, 11, 26 ]
+    arr = [10, 15, 40, 45, 55, 8, 6, 11, 26, 4 , 44, 41, 42, 56, 57,78,79,80,81,82]
 
-    #insertion sort
+    #-------insertion sort-------#
     insertion_sorted_arr = insertion_sort(arr)
     mid_element_ins = insertion_sorted_arr[math.ceil(len(insertion_sorted_arr)/2)-1]
-    print("after having insertion sort: ", insertion_sorted_arr, "\nmiddle element: ", mid_element_ins)
+    print("after having insertion sort: ", insertion_sorted_arr, "\n⌈n/2⌉'th element in the list (median): ", mid_element_ins)
 
-    #merge sort
+    #-------merge sort-----------#
     merge_sorted_arr = merge_sort(arr)
     mid_element_mrg = merge_sorted_arr[math.ceil(len(merge_sorted_arr) / 2) - 1]
-    print("\nafter having insertion sort: ", merge_sorted_arr, "\nmiddle element: ", mid_element_mrg)
+    print("\nafter having merge sort: ", merge_sorted_arr, "\n⌈n/2⌉'th element in the list (median): ", mid_element_mrg)
 
     #building max heap and returning root after n/2 removals
     heap = max_heap(arr)
     for i in range(math.floor(len(arr)/2)): heap.pop()
-    print("\nafter having n/2 times removal head of heap returned: ",heap.peek())
+    print("\nafter having ⌊n/2⌋ times removal head of heap returned (median of list): ", heap.peek())
 
     # quick select using first element as pivot
     quick_selected_arr_ver1 = quick_select_ver1(arr, math.ceil(len(arr) / 2))
+    print("\nafter implementing quick select ver#1, median: ", quick_selected_arr_ver1)
 
-    # sorted_arr = quick_select_ver2(arr, 0, len(arr)-1, math.ceil(len(arr)/2)-1)
+    quick_selected_arr_ver2 = quick_select_ver2(arr, 0, len(arr)-1, math.ceil(len(arr) / 2)-1)
+    print("\nafter implementing quick select ver#2, median: ", quick_selected_arr_ver2)
