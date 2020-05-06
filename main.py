@@ -1,4 +1,9 @@
 import math
+import time
+
+
+#global counter variables
+counter_is, counter_mrg, counter_heap, counter_qui_ver1, counter_qui_ver2 = 0, 0, 0, 0, 0
 
 
 class max_heap:
@@ -67,6 +72,9 @@ class max_heap:
     # when a node is inserted at the top of the heap
     # heapify it down to its proper position in the heap
     def heapify_down(self, index):
+
+        global counter_heap
+
         left = index * 2  # index of left
         right = index * 2 + 1  # index of right
         largest = index  # index of the largest value
@@ -85,6 +93,8 @@ class max_heap:
             self.swap(index, largest)  # swap places
             self.heapify_down(largest)  # and recursively call heapify down on the largest value
 
+        counter_heap += 1
+
 
 # swap positions in the array
 def swap_array(array, index1, index2):
@@ -96,6 +106,8 @@ def swap_array(array, index1, index2):
 # we use first item as pivot as the 1st version
 # returns: k'th position in a given unsorted array
 def quick_select_ver1(array, k):
+
+    global counter_qui_ver1
 
     pivot = array[0]  # assigning first element as the pivot
     arr1, arr2 = [], []  # empty arrays that will handle the partitioning
@@ -110,6 +122,8 @@ def quick_select_ver1(array, k):
         elif array[i] > pivot:
             arr2.append(array[i])
         else: pass
+
+        counter_qui_ver1 += 1
 
     # if it is in the small element array
     if k <= len(arr1):
@@ -152,6 +166,8 @@ def quick_select_ver2(array, left, right, k):
 # greater elements to right of the pivot
 def partition(array, left, right):
 
+    global counter_qui_ver2
+
     pivot = array[right]  # declaring pivot as the last element
     tmp_index = left  # temporary variable to hold left index, each iteration it will move one by one
 
@@ -161,6 +177,8 @@ def partition(array, left, right):
         if array[i] <= pivot:
             swap_array(array, i, tmp_index)  # if so swap current index and the left index
             tmp_index += 1
+
+        counter_qui_ver2 += 1
 
     # after all for the final step swap right and the tmp_location
     swap_array(array, right, tmp_index)
@@ -185,6 +203,7 @@ def merge_sort(array):
 
 def merge(left, right):
 
+    global counter_mrg
     merged = []
     left_pos, right_pos = 0, 0
 
@@ -202,6 +221,8 @@ def merge(left, right):
             merged.append(right[right_pos])
             right_pos += 1
 
+        counter_mrg += 1
+
     # if the case is that, there are either elements in the left or right
     # simply extend the elements in left and right position all the way to the end
     merged.extend(left[left_pos:])
@@ -214,12 +235,14 @@ def merge(left, right):
 def insertion_sort(array):
 
     # go until the last element of the array
+    global counter_is
     for i in range(1, len(arr)):
         j = i
         # shifting each element one place to the right until
         # a suitable position is found for the new element
         while j > 0 and array[j-1] > array[j]:
             array[j], array[j-1] = array[j-1], array[j]
+            counter_is += 1
             j -= 1
         i += 1
 
@@ -232,27 +255,61 @@ if __name__ == "__main__":
     arr = [10, 15, 40, 45, 55, 8, 6, 11, 26, 4, 44, 41, 42, 56, 57, 78, 79, 80, 81, 82]
 
     # -------insertion sort------- #
+    t_start_is = time.perf_counter()
     insertion_sorted_arr = insertion_sort(arr)
+    t_end_is = time.perf_counter()
+    # total time spent in insertion sort
+    total_time_is = t_end_is - t_start_is
     # declaring median after implementing sorting
     mid_element_ins = insertion_sorted_arr[math.ceil(len(insertion_sorted_arr)/2)-1]
     print("after having insertion sort: ", insertion_sorted_arr, "\n⌈n/2⌉'th element in the list (median): ", mid_element_ins)
+    print("Total time spent in insertion sort is: {:.7f}".format(total_time_is))
+    print("Total time the basic operation occurred is: ", counter_is)
+
 
     # -------merge sort----------- #
+    t_start_mrg = time.perf_counter()
     merge_sorted_arr = merge_sort(arr)
+    t_end_mrg = time.perf_counter()
+    # total time spent in merge sort
+    total_time_mrg = t_end_mrg - t_start_mrg
     # declaring median after implementing sorting
     mid_element_mrg = merge_sorted_arr[math.ceil(len(merge_sorted_arr) / 2) - 1]
     print("\nafter having merge sort: ", merge_sorted_arr, "\n⌈n/2⌉'th element in the list (median): ", mid_element_mrg)
+    print("Total time spent in merge sort is: {:.7f}".format(total_time_mrg))
+    print("Total time the basic operation occurred is: ", counter_mrg)
+
 
     # building max heap and returning root after n/2 removals
     heap = max_heap(arr)
+    t_start_heap = time.perf_counter()
     for i in range(math.floor(len(arr)/2)):
         heap.pop()  # ⌊n/2⌋ times max removal
+    t_end_heap = time.perf_counter()
+    # total time spent in max heap removal
+    total_time_heap = t_end_heap - t_start_heap
     print("\nafter having ⌊n/2⌋ times removal head of heap returned (median of list): ", heap.peek())
+    print("Total time spent in max heap removal is: {:.7f}".format(total_time_heap))
+    print("Total time the basic operation occurred is: ", counter_heap)
+
 
     # quick select using first element as pivot
+    t_start_qui_ver1 = time.perf_counter()
     quick_selected_arr_ver1 = quick_select_ver1(arr, math.ceil(len(arr) / 2))
+    t_end_qui_ver1 = time.perf_counter()
+    # total time spent in quick select ver#1 removal
+    total_time_qui_ver1 = t_end_qui_ver1 - t_start_qui_ver1
     print("\nafter implementing quick select ver#1, median: ", quick_selected_arr_ver1)
+    print("Total time spent in quick select ver#1 is: {:.7f}".format(total_time_qui_ver1))
+    print("Total time the basic operation occurred is: ", counter_qui_ver1)
+
 
     # quick select using median-of-three pivot selection
+    t_start_qui_ver2 = time.perf_counter()
     quick_selected_arr_ver2 = quick_select_ver2(arr, 0, len(arr)-1, math.ceil(len(arr) / 2)-1)
+    t_end_qui_ver2 = time.perf_counter()
+    # total time spent in quick select ver#2 removal
+    total_time_qui_ver2 = t_end_qui_ver2 - t_start_qui_ver2
     print("\nafter implementing quick select ver#2, median: ", quick_selected_arr_ver2)
+    print("Total time spent in quick select ver#1 is: {:.7f}".format(total_time_qui_ver2))
+    print("Total time the basic operation occurred is: ", counter_qui_ver2)
