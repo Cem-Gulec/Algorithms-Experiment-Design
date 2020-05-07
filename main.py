@@ -97,12 +97,6 @@ class max_heap:
         counter_heap += 1
 
 
-# swap positions in the array
-def swap_array(array, index1, index2):
-    array[index1], array[index2] = array[index2], array[index1]
-    return array
-
-
 # quick select algorithm where
 # we use first item as pivot as the 1st version
 # returns: k'th position in a given unsorted array
@@ -141,7 +135,7 @@ def quick_select_ver1(array, k):
 
 # returns: k'th position in a given unsorted array
 def quick_select_ver2(array, left, right, k):
-    
+
     sys.setrecursionlimit(10 ** 6)
 
     # if given k is less than len of array
@@ -170,6 +164,7 @@ def quick_select_ver2(array, left, right, k):
 def partition(array, left, right):
 
     global counter_qui_ver2
+    sys.setrecursionlimit(10 ** 6)
 
     pivot = array[right]  # declaring pivot as the last element
     tmp_index = left  # temporary variable to hold left index, each iteration it will move one by one
@@ -178,13 +173,13 @@ def partition(array, left, right):
     for i in range(left, right):
         # check whether the index value is less than or equal to pivot
         if array[i] <= pivot:
-            swap_array(array, i, tmp_index)  # if so swap current index and the left index
+            array[i], array[tmp_index] = array[tmp_index], array[i]  # if so swap current index and the left index
             tmp_index += 1
 
         counter_qui_ver2 += 1
 
     # after all for the final step swap right and the tmp_location
-    swap_array(array, right, tmp_index)
+    array[right], array[tmp_index] = array[tmp_index], array[right]
 
     return tmp_index
 
