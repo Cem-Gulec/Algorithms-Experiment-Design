@@ -1,5 +1,6 @@
 import math
 import time
+import sys
 
 
 #global counter variables
@@ -140,6 +141,8 @@ def quick_select_ver1(array, k):
 
 # returns: k'th position in a given unsorted array
 def quick_select_ver2(array, left, right, k):
+    
+    sys.setrecursionlimit(10 ** 6)
 
     # if given k is less than len of array
     if 0 < k <= right-left+1:
@@ -250,9 +253,28 @@ def insertion_sort(array):
     return array
 
 
+def read_file(arr):
+    file1 = open('100k.txt', 'r')
+    count = 0
+
+    while True:
+        count += 1
+
+        # Get next line from file
+        line = file1.readline()
+
+        # end of file
+        if not line:
+            break
+        arr.append(int(line.strip()))
+
+    file1.close()
+
+
 if __name__ == "__main__":
     # our list four trial
-    arr = [10, 15, 40, 45, 55, 8, 6, 11, 26, 4, 44, 41, 42, 56, 57, 78, 79, 80, 81, 82]
+    arr = []
+    read_file(arr)
 
     # -------insertion sort------- #
     t_start_is = time.perf_counter()
@@ -262,7 +284,7 @@ if __name__ == "__main__":
     total_time_is = t_end_is - t_start_is
     # declaring median after implementing sorting
     mid_element_ins = insertion_sorted_arr[math.ceil(len(insertion_sorted_arr)/2)-1]
-    print("after having insertion sort: ", insertion_sorted_arr, "\n⌈n/2⌉'th element in the list (median): ", mid_element_ins)
+    print("⌈n/2⌉'th element in the list (median): ", mid_element_ins)
     print("Total time spent in insertion sort is: {:.7f}".format(total_time_is))
     print("Total time the basic operation occurred is: ", counter_is)
 
@@ -275,7 +297,7 @@ if __name__ == "__main__":
     total_time_mrg = t_end_mrg - t_start_mrg
     # declaring median after implementing sorting
     mid_element_mrg = merge_sorted_arr[math.ceil(len(merge_sorted_arr) / 2) - 1]
-    print("\nafter having merge sort: ", merge_sorted_arr, "\n⌈n/2⌉'th element in the list (median): ", mid_element_mrg)
+    print("\n⌈n/2⌉'th element in the list (median): ", mid_element_mrg)
     print("Total time spent in merge sort is: {:.7f}".format(total_time_mrg))
     print("Total time the basic operation occurred is: ", counter_mrg)
 
