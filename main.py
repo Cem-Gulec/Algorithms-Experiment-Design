@@ -5,6 +5,7 @@ import sys
 
 #global counter variables
 counter_is, counter_mrg, counter_heap, counter_qui_ver1, counter_qui_ver2 = 0, 0, 0, 0, 0
+arr = []
 
 
 class max_heap:
@@ -230,25 +231,20 @@ def merge(left, right):
     return merged
 
 
-def insertion_sort(array):
+def insertion_sort(tmp_list):
 
     # go until the last element of the array
-    global counter_is
-    for i in range(1, len(arr)):
-        j = i
-        # shifting each element one place to the right until
-        # a suitable position is found for the new element
-        while j > 0 and array[j-1] > array[j]:
-            array[j], array[j-1] = array[j-1], array[j]
-            counter_is += 1
-            j -= 1
-        i += 1
-
-    # returning sorted array
-    return array
+    for i in range(1, len(tmp_list)):
+        if tmp_list[i] >= tmp_list[i-1]:
+            continue
+        for j in range(i):
+            if tmp_list[i] < tmp_list[j]:
+                tmp_list[j], tmp_list[j+1:i+1] = tmp_list[i], tmp_list[j:i]
+                break
 
 
-def read_file(arr):
+
+def read_file():
     file1 = open('100k.txt', 'r')
     count = 0
 
@@ -268,39 +264,42 @@ def read_file(arr):
 
 if __name__ == "__main__":
     # our list four trial
-    arr = []
-    read_file(arr)
+    read_file()
+
 
     # -------insertion sort------- #
+    tmp_list = list(arr)
     t_start_is = time.perf_counter()
-    insertion_sorted_arr = insertion_sort(arr)
+    insertion_sort(tmp_list)
     t_end_is = time.perf_counter()
     # total time spent in insertion sort
     total_time_is = t_end_is - t_start_is
     # declaring median after implementing sorting
-    mid_element_ins = insertion_sorted_arr[math.ceil(len(insertion_sorted_arr)/2)-1]
+    mid_element_ins = tmp_list[math.ceil(len(tmp_list)/2)-1]
     print("⌈n/2⌉'th element in the list (median): ", mid_element_ins)
     print("Total time spent in insertion sort is: {:.7f}".format(total_time_is))
     print("Total time the basic operation occurred is: ", counter_is)
 
 
     # -------merge sort----------- #
+    tmp_list2 = list(arr)
     t_start_mrg = time.perf_counter()
-    merge_sorted_arr = merge_sort(arr)
+    tmp_list2_2 = merge_sort(tmp_list2)
     t_end_mrg = time.perf_counter()
     # total time spent in merge sort
     total_time_mrg = t_end_mrg - t_start_mrg
     # declaring median after implementing sorting
-    mid_element_mrg = merge_sorted_arr[math.ceil(len(merge_sorted_arr) / 2) - 1]
+    mid_element_mrg = tmp_list2_2[math.ceil(len(tmp_list2_2) / 2) - 1]
     print("\n⌈n/2⌉'th element in the list (median): ", mid_element_mrg)
     print("Total time spent in merge sort is: {:.7f}".format(total_time_mrg))
     print("Total time the basic operation occurred is: ", counter_mrg)
 
 
     # building max heap and returning root after n/2 removals
+    tmp_list3 = list(arr)
     heap = max_heap(arr)
     t_start_heap = time.perf_counter()
-    for i in range(math.floor(len(arr)/2)):
+    for i in range(math.floor(len(tmp_list3)/2)):
         heap.pop()  # ⌊n/2⌋ times max removal
     t_end_heap = time.perf_counter()
     # total time spent in max heap removal
@@ -311,8 +310,9 @@ if __name__ == "__main__":
 
 
     # quick select using first element as pivot
+    tmp_list4 = list(arr)
     t_start_qui_ver1 = time.perf_counter()
-    quick_selected_arr_ver1 = quick_select_ver1(arr, math.ceil(len(arr) / 2))
+    quick_selected_arr_ver1 = quick_select_ver1(arr, math.ceil(len(tmp_list4) / 2))
     t_end_qui_ver1 = time.perf_counter()
     # total time spent in quick select ver#1 removal
     total_time_qui_ver1 = t_end_qui_ver1 - t_start_qui_ver1
@@ -322,8 +322,9 @@ if __name__ == "__main__":
 
 
     # quick select using median-of-three pivot selection
+    tmp_list5 = list(arr)
     t_start_qui_ver2 = time.perf_counter()
-    quick_selected_arr_ver2 = quick_select_ver2(arr, 0, len(arr)-1, math.ceil(len(arr) / 2)-1)
+    quick_selected_arr_ver2 = quick_select_ver2(tmp_list5, 0, len(tmp_list5)-1, math.ceil(len(tmp_list5) / 2)-1)
     t_end_qui_ver2 = time.perf_counter()
     # total time spent in quick select ver#2 removal
     total_time_qui_ver2 = t_end_qui_ver2 - t_start_qui_ver2
